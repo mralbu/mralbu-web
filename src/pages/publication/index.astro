@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PublicationItem from '../../components/PublicationItem.astro';
+
+const pubs = (await getCollection('publications')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base title="Publications">
+  <section class="container narrow wrap">
+    <h1>Publications</h1>
+    <div class="list">{pubs.map((pub) => <PublicationItem pub={pub} />)}</div>
+  </section>
+</Base>
+
+<style>
+  .wrap { padding-block: 3rem; }
+  .list { display: grid; gap: 2rem; margin-top: 2rem; }
+</style>

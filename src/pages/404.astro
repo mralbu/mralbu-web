@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../utils';
+---
+
+<Base title="Page not found">
+  <section class="container narrow wrap">
+    <p class="eyebrow">404</p>
+    <h1>Page not found</h1>
+    <p class="muted">The page you were looking for doesn't exist (anymore).</p>
+    <p><a href={url()}>← Back home</a></p>
+  </section>
+</Base>
+
+<style>
+  .wrap { padding-block: 5rem; }
+</style>

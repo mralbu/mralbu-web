@@ -1,0 +1,23 @@
+---
+// Projects link straight to their external pages; these stubs keep the old
+// /project/<name>/ URLs from the Hugo site working.
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { id: p.id }, props: { link: p.data.link, title: p.data.title } }));
+}
+const { link, title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta http-equiv="refresh" content={`0; url=${link}`} />
+    <link rel="canonical" href={link} />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body><p>Redirecting to <a href={link}>{link}</a>…</p></body>
+</html>

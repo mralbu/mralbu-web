@@ -1,0 +1,173 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import { profile } from '../data/profile';
+import { url, formatDate } from '../utils';
+import avatar from '../assets/avatar.jpg';
+import heroImg from '../assets/hero.jpg';
+
+const byDate = (a: { data: { date: Date } }, b: { data: { date: Date } }) => b.data.date.valueOf() - a.data.date.valueOf();
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(byDate).slice(0, 5);
+const projects = (await getCollection('projects')).sort(byDate);
+const publications = (await getCollection('publications')).sort(byDate).slice(0, 5);
+---
+
+<Base>
+  <section class="hero container">
+    <Image src={avatar} alt={`Portrait of ${profile.name}`} width={360} height={360} class="avatar" loading="eager" />
+    <div>
+      <p class="eyebrow">{profile.role} · {profile.organization.name}</p>
+      <h1>{profile.name}</h1>
+      {profile.bio.map((p) => <p class="lead">{p}</p>)}
+      <ul class="social">
+        {profile.social.map((s) => (
+          <li><a href={s.url}><Icon name={s.icon} size={17} /> {s.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="focus" aria-label="Focus areas">
+    <Image src={heroImg} alt="" class="focus-bg" width={1280} height={400} />
+    <div class="container focus-grid">
+      {profile.focus.map((f) => (
+        <div>
+          <h2>{f.title}</h2>
+          <p>{f.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container about" id="about">
+    <div>
+      <h2>Interests</h2>
+      <ul class="plain">{profile.interests.map((i) => <li>{i}</li>)}</ul>
+    </div>
+    <div>
+      <h2>Education</h2>
+      <ul class="plain edu">
+        {profile.education.map((e) => (
+          <li><strong>{e.course}</strong>, {e.year}<br /><span class="muted">{e.institution}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2>Skills</h2>
+      <ul class="plain skills">
+        {profile.skills.map((s) => (
+          <li>
+            <span>{s.name}</span>
+            <span class="meter" role="meter" aria-valuenow={s.level} aria-valuemin="0" aria-valuemax="100" aria-label={s.name}>
+              <span style={`width:${s.level}%`}></span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section container" id="posts">
+    <div class="section-head">
+      <h2>Recent posts</h2>
+      <a class="more" href={url('post/')}>All posts <Icon name="arrow" size={16} /></a>
+    </div>
+    <ul class="plain posts">
+      {posts.map((p) => (
+        <li>
+          <time datetime={p.data.date.toISOString()} class="muted">{formatDate(p.data.date)}</time>
+          <a href={url(`post/${p.id}/`)}>{p.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section container" id="projects">
+    <div class="section-head"><h2>Projects</h2></div>
+    <div class="projects">
+      {projects.map((p) => (
+        <article class="card project">
+          <a href={p.data.link} class="img-link" tabindex="-1" aria-hidden="true">
+            <Image src={p.data.image} alt={p.data.imageAlt} width={640} widths={[320, 640, 960]} sizes="(max-width: 48rem) 100vw, 33vw" />
+          </a>
+          <div class="body">
+            <h3><a href={p.data.link}>{p.data.title} <Icon name="external" size={14} /></a></h3>
+            <p class="muted">{p.data.summary}</p>
+            {p.data.links.length > 0 && (
+              <p class="extra">{p.data.links.map((l) => <a href={l.url}>{l.label} →</a>)}</p>
+            )}
+            <ul class="tags">{p.data.tags.map((t) => <li>{t}</li>)}</ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container" id="publications">
+    <div class="section-head"><h2>Publications</h2></div>
+    <div class="pubs">
+      {publications.map((pub) => <PublicationItem pub={pub} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { display: grid; grid-template-columns: 15rem 1fr; gap: 3rem; align-items: center; padding-block: 4.5rem 3.5rem; }
+  .hero :global(.avatar) { width: 15rem; height: 15rem; object-fit: cover; border-radius: 50%; border: 4px solid var(--surface); box-shadow: 0 0 0 1px var(--border), var(--shadow); }
+  .hero h1 { margin-bottom: 0.4rem; }
+  .lead { font-size: 1.15rem; color: var(--muted); max-width: 38rem; margin: 0 0 1.5rem; }
+  .social { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; padding: 0; margin: 0; }
+  .social a {
+    display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.95rem; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.95rem;
+  }
+  .social a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .focus { position: relative; color: #fff; overflow: hidden; isolation: isolate; }
+  .focus :global(.focus-bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+  .focus::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, rgb(8 40 42 / 0.82), rgb(20 20 24 / 0.7)); z-index: -1; }
+  .focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding-block: 3rem; text-align: center; }
+  .focus h2 { font-size: 1.5rem; margin: 0 0 0.25rem; }
+  .focus p { margin: 0; opacity: 0.85; }
+
+  .plain { list-style: none; padding: 0; margin: 0; }
+  .about { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .about h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+  .about li + li { margin-top: 0.6rem; }
+  .edu { font-size: 0.97rem; line-height: 1.45; }
+  .skills li { display: grid; grid-template-columns: 6rem 1fr; align-items: center; gap: 0.75rem; }
+  .meter { height: 0.45rem; border-radius: 999px; background: var(--border); overflow: hidden; }
+  .meter span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+
+  .posts li { display: flex; gap: 1.5rem; padding-block: 0.7rem; border-bottom: 1px dashed var(--border); align-items: baseline; }
+  .posts time { flex: none; width: 7.5rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  .posts a { color: var(--text); font-weight: 500; text-decoration: none; }
+  .posts a:hover { color: var(--accent); }
+
+  .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .project { overflow: hidden; display: flex; flex-direction: column; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .project:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+  .project :global(img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #fff; border-bottom: 1px solid var(--border); }
+  .body { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
+  .body h3 { margin: 0; }
+  .body h3 a { color: var(--text); text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .body h3 a:hover { color: var(--accent); }
+  .body p { margin: 0; font-size: 0.95rem; }
+  .body .tags { margin-top: auto; padding-top: 0.4rem; }
+  .extra a { font-weight: 500; font-size: 0.92rem; }
+
+  .pubs { display: grid; gap: 2rem; }
+
+  @media (max-width: 48rem) {
+    .hero { grid-template-columns: 1fr; gap: 1.75rem; padding-block: 3rem 2.5rem; text-align: center; justify-items: center; }
+    .hero :global(.avatar) { width: 10rem; height: 10rem; }
+    .lead { margin-inline: auto; }
+    .social { justify-content: center; }
+    .focus-grid, .about, .projects { grid-template-columns: 1fr; }
+    .focus-grid { gap: 1.25rem; padding-block: 2.25rem; }
+    .posts li { flex-direction: column; gap: 0.1rem; }
+  }
+</style>

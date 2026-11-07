@@ -1,0 +1,103 @@
+:root {
+  color-scheme: light;
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #1c1d1f;
+  --muted: #5d6168;
+  --border: #e4e2dc;
+  --accent: #0f6e6a;
+  --accent-soft: #e2f1ef;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.04);
+  --radius: 14px;
+  --max: 64rem;
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #121416;
+    --surface: #1a1d20;
+    --text: #e8e6e1;
+    --muted: #a0a4ab;
+    --border: #2b2f34;
+    --accent: #5cc7bd;
+    --accent-soft: #173331;
+    --shadow: none;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #121416;
+  --surface: #1a1d20;
+  --text: #e8e6e1;
+  --muted: #a0a4ab;
+  --border: #2b2f34;
+  --accent: #5cc7bd;
+  --accent-soft: #173331;
+  --shadow: none;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1.0625rem/1.65 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+h1, h2, h3 { line-height: 1.2; letter-spacing: -0.015em; margin: 0 0 0.5em; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.15rem; }
+
+.container { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: 1.25rem; }
+.narrow { max-width: 44rem; }
+
+.section { padding-block: 4rem; border-top: 1px solid var(--border); }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem; }
+.section-head h2 { margin: 0; }
+.eyebrow { font: 600 0.75rem/1 var(--font); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+.muted { color: var(--muted); }
+.more { font-weight: 500; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; }
+.more:hover { text-decoration: underline; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; margin: 0; list-style: none; }
+.tags li { font-size: 0.78rem; padding: 0.15rem 0.6rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+.icon { flex: none; }
+
+/* Long-form content */
+.prose { font-size: 1.1rem; }
+.prose h2 { margin-top: 2em; }
+.prose h3 { margin-top: 1.6em; }
+.prose pre { padding: 1rem; border-radius: 10px; overflow-x: auto; font-size: 0.9rem; border: 1px solid var(--border); }
+.prose code { font-family: var(--mono); font-size: 0.9em; }
+.prose :not(pre) > code { background: var(--accent-soft); padding: 0.1em 0.35em; border-radius: 5px; }
+.prose blockquote { margin: 1.5em 0; padding-left: 1rem; border-left: 3px solid var(--accent); color: var(--muted); }
+.prose img { border-radius: 10px; }
+.prose table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+.prose th, .prose td { border-bottom: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+
+/* Shiki dual themes */
+:root[data-theme='dark'] .astro-code, :root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .astro-code, :root:not([data-theme='light']) .astro-code span {
+    color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+  }
+}

@@ -1,0 +1,27 @@
+---
+import Base from './Base.astro';
+import { url } from '../utils';
+
+interface Props {
+  title: string;
+  description?: string;
+  back: { label: string; href: string };
+}
+const { title, description, back } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article class="container narrow article">
+    <a class="back" href={url(back.href)}>← {back.label}</a>
+    <header>
+      <slot name="header" />
+    </header>
+    <slot />
+  </article>
+</Base>
+
+<style>
+  .article { padding-block: 3rem 2rem; }
+  .back { display: inline-block; margin-bottom: 2rem; font-size: 0.92rem; text-decoration: none; }
+  header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+</style>
