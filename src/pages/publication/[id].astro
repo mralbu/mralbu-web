@@ -25,8 +25,10 @@ const ogImage = image ? (await getImage({ src: image, width: 720, format: 'jpeg'
     <p class="authors">
       {authors.map((a, i) => <>{isSelf(a) ? <strong>{a}</strong> : a}{i < authors.length - 1 && ', '}</>)}
     </p>
-    <p class="muted"><em>{venue}</em> · {formatDate(date)}</p>
-    {award && <p class="award"><span class="badge"><Icon name="award" size={15} /> {award}</span></p>}
+    <p class="meta muted">
+      <span><em>{venue}</em> · {formatDate(date)}</span>
+      {award && <span class="badge"><Icon name="award" size={15} /> {award}</span>}
+    </p>
     <div class="actions">
       {pdf && <a href={url(`publication/${pub.id}/${encodeURIComponent(pdf)}`)}><Icon name="pdf" size={16} /> PDF</a>}
       {doi && <a href={`https://doi.org/${doi}`}><Icon name="external" size={16} /> DOI</a>}
@@ -43,7 +45,7 @@ const ogImage = image ? (await getImage({ src: image, width: 720, format: 'jpeg'
   .title { font-size: clamp(1.6rem, 4vw, 2.2rem); }
   .authors { margin: 0 0 0.25rem; }
   header p { margin: 0; }
-  .award { margin-top: 0.75rem; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem 0.65rem; }
   .actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
   .actions a {
     display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.9rem; border-radius: 999px;
