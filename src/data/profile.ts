@@ -19,6 +19,7 @@ export const profile = {
   ],
   interests: ['Petrophysics & SCAL', 'Data Science', 'Machine Learning', 'Reservoir Engineering'],
   education: [
+    { course: 'PhD in Electrical Engineering', institution: 'PUC-Rio · Rio de Janeiro, RJ', period: '2025–Present' },
     { course: 'MSc in Computer Science', institution: 'UFRJ · Rio de Janeiro, RJ', period: '2018–2020' },
     { course: 'BSc in Electronics Engineering', institution: 'Instituto Tecnológico de Aeronáutica (ITA)', period: '2003–2008' },
   ],
