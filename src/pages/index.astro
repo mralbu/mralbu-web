@@ -7,7 +7,6 @@ import PublicationItem from '../components/PublicationItem.astro';
 import { profile } from '../data/profile';
 import { url, formatDate } from '../utils';
 import avatar from '../assets/avatar.jpg';
-import heroImg from '../assets/hero.jpg';
 
 const byDate = (a: { data: { date: Date } }, b: { data: { date: Date } }) => b.data.date.valueOf() - a.data.date.valueOf();
 const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(byDate).slice(0, 5);
@@ -19,7 +18,7 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   <section class="hero container">
     <Image src={avatar} alt={`Portrait of ${profile.name}`} width={360} height={360} class="avatar" loading="eager" />
     <div>
-      <p class="eyebrow">{profile.role} · {profile.organization.name}</p>
+      <p class="eyebrow">{profile.role}</p>
       <h1>{profile.name}</h1>
       {profile.bio.map((p) => <p class="lead">{p}</p>)}
       <ul class="social">
@@ -27,18 +26,6 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
           <li><a href={s.url}><Icon name={s.icon} size={17} /> {s.label}</a></li>
         ))}
       </ul>
-    </div>
-  </section>
-
-  <section class="focus" aria-label="Focus areas">
-    <Image src={heroImg} alt="" class="focus-bg" width={1280} height={400} />
-    <div class="container focus-grid">
-      {profile.focus.map((f) => (
-        <div>
-          <h2>{f.title}</h2>
-          <p>{f.text}</p>
-        </div>
-      ))}
     </div>
   </section>
 
@@ -52,52 +39,6 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
       <ul class="plain edu">
         {profile.education.map((e) => (
           <li><strong>{e.course}</strong>, {e.period}<br /><span class="muted">{e.institution}</span></li>
-        ))}
-      </ul>
-    </div>
-    <div>
-      <h2>Skills</h2>
-      <ul class="plain skills">
-        {profile.skills.map((s) => (
-          <li>
-            <span>{s.name}</span>
-            <span class="meter" role="meter" aria-valuenow={s.level} aria-valuemin="0" aria-valuemax="100" aria-label={s.name}>
-              <span style={`width:${s.level}%`}></span>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section container career" id="experience">
-    <div>
-      <div class="section-head">
-        <h2>Experience</h2>
-        <a class="more" href={profile.social.find((s) => s.icon === 'cv')!.url}>Full CV <Icon name="external" size={14} /></a>
-      </div>
-      <ul class="plain timeline">
-        {profile.experience.map((item) => (
-          <li>
-            <p class="item-head">
-              <strong>{item.role}</strong>
-              <span class="muted period">{item.period}</span>
-            </p>
-            <p class="muted org">{item.organization}</p>
-            <p class="muted desc">{item.summary}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div>
-      <div class="section-head"><h2>Awards</h2></div>
-      <ul class="plain awards">
-        {profile.awards.map((award) => (
-          <li class="card award-card">
-            <p class="eyebrow"><Icon name="award" size={13} /> {award.organization} · {award.year}</p>
-            <h3>{award.title}</h3>
-            <p class="muted">{award.summary}</p>
-          </li>
         ))}
       </ul>
     </div>
@@ -163,34 +104,11 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   }
   .social a:hover { border-color: var(--accent); color: var(--accent); }
 
-  .focus { position: relative; color: #fff; overflow: hidden; isolation: isolate; }
-  .focus :global(.focus-bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
-  .focus::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, rgb(8 40 42 / 0.82), rgb(20 20 24 / 0.7)); z-index: -1; }
-  .focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding-block: 3rem; text-align: center; }
-  .focus h2 { font-size: 1.5rem; margin: 0 0 0.25rem; }
-  .focus p { margin: 0; opacity: 0.85; }
-
   .plain { list-style: none; padding: 0; margin: 0; }
-  .about { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+  .about { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2.5rem; }
   .about h2 { font-size: 1.1rem; margin-bottom: 1rem; }
   .about li + li { margin-top: 0.6rem; }
   .edu { font-size: 0.97rem; line-height: 1.45; }
-  .skills li { display: grid; grid-template-columns: 6rem 1fr; align-items: center; gap: 0.75rem; }
-  .meter { height: 0.45rem; border-radius: 999px; background: var(--border); overflow: hidden; }
-  .meter span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
-
-  .career { display: grid; grid-template-columns: 1.35fr 1fr; gap: 3rem; align-items: start; }
-  .timeline li { padding-left: 1rem; border-left: 2px solid var(--border); }
-  .timeline li + li { margin-top: 1.35rem; }
-  .item-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; margin: 0; flex-wrap: wrap; }
-  .period { font-size: 0.86rem; font-variant-numeric: tabular-nums; }
-  .org { margin: 0.1rem 0 0.35rem; font-size: 0.92rem; }
-  .desc { margin: 0; font-size: 0.92rem; line-height: 1.5; }
-  .awards { display: grid; gap: 1rem; }
-  .award-card { padding: 1.1rem 1.2rem; }
-  .award-card .eyebrow { display: inline-flex; align-items: center; gap: 0.35rem; margin-bottom: 0.45rem; }
-  .award-card h3 { font-size: 1.02rem; margin: 0 0 0.35rem; }
-  .award-card p:last-child { margin: 0; font-size: 0.92rem; line-height: 1.5; }
 
   .posts li { display: flex; gap: 1.5rem; padding-block: 0.7rem; border-bottom: 1px dashed var(--border); align-items: baseline; }
   .posts time { flex: none; width: 7.5rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
@@ -217,8 +135,7 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
     .hero :global(.avatar) { width: 10rem; height: 10rem; }
     .lead { margin-inline: auto; }
     .social { justify-content: center; }
-    .focus-grid, .about, .career, .projects { grid-template-columns: 1fr; }
-    .focus-grid { gap: 1.25rem; padding-block: 2.25rem; }
+    .about, .projects { grid-template-columns: 1fr; }
     .posts li { flex-direction: column; gap: 0.1rem; }
   }
 </style>
