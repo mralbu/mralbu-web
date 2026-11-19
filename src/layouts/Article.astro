@@ -1,16 +1,18 @@
 ---
+import 'katex/dist/katex.min.css';
 import Base from './Base.astro';
 import { url } from '../utils';
 
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
   back: { label: string; href: string };
 }
-const { title, description, back } = Astro.props;
+const { title, description, ogImage, back } = Astro.props;
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} ogImage={ogImage}>
   <article class="container narrow article">
     <a class="back" href={url(back.href)}>← {back.label}</a>
     <header>

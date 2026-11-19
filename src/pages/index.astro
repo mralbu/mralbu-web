@@ -51,7 +51,7 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
       <h2>Education</h2>
       <ul class="plain edu">
         {profile.education.map((e) => (
-          <li><strong>{e.course}</strong>, {e.year}<br /><span class="muted">{e.institution}</span></li>
+          <li><strong>{e.course}</strong>, {e.period}<br /><span class="muted">{e.institution}</span></li>
         ))}
       </ul>
     </div>
@@ -64,6 +64,39 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
             <span class="meter" role="meter" aria-valuenow={s.level} aria-valuemin="0" aria-valuemax="100" aria-label={s.name}>
               <span style={`width:${s.level}%`}></span>
             </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section container career" id="experience">
+    <div>
+      <div class="section-head">
+        <h2>Experience</h2>
+        <a class="more" href={profile.social.find((s) => s.icon === 'cv')!.url}>Full CV <Icon name="external" size={14} /></a>
+      </div>
+      <ul class="plain timeline">
+        {profile.experience.map((item) => (
+          <li>
+            <p class="item-head">
+              <strong>{item.role}</strong>
+              <span class="muted period">{item.period}</span>
+            </p>
+            <p class="muted org">{item.organization}</p>
+            <p class="muted desc">{item.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <div class="section-head"><h2>Awards</h2></div>
+      <ul class="plain awards">
+        {profile.awards.map((award) => (
+          <li class="card award-card">
+            <p class="eyebrow"><Icon name="award" size={13} /> {award.organization} · {award.year}</p>
+            <h3>{award.title}</h3>
+            <p class="muted">{award.summary}</p>
           </li>
         ))}
       </ul>
@@ -107,7 +140,10 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   </section>
 
   <section class="section container" id="publications">
-    <div class="section-head"><h2>Publications</h2></div>
+    <div class="section-head">
+      <h2>Publications</h2>
+      <a class="more" href={url('publication/')}>All publications <Icon name="arrow" size={16} /></a>
+    </div>
     <div class="pubs">
       {publications.map((pub) => <PublicationItem pub={pub} />)}
     </div>
@@ -118,7 +154,8 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   .hero { display: grid; grid-template-columns: 15rem 1fr; gap: 3rem; align-items: center; padding-block: 4.5rem 3.5rem; }
   .hero :global(.avatar) { width: 15rem; height: 15rem; object-fit: cover; border-radius: 50%; border: 4px solid var(--surface); box-shadow: 0 0 0 1px var(--border), var(--shadow); }
   .hero h1 { margin-bottom: 0.4rem; }
-  .lead { font-size: 1.15rem; color: var(--muted); max-width: 38rem; margin: 0 0 1.5rem; }
+  .lead { font-size: 1.1rem; color: var(--muted); max-width: 40rem; margin: 0 0 1rem; }
+  .lead:last-of-type { margin-bottom: 1.5rem; }
   .social { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; padding: 0; margin: 0; }
   .social a {
     display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.95rem; border-radius: 999px;
@@ -142,6 +179,19 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   .meter { height: 0.45rem; border-radius: 999px; background: var(--border); overflow: hidden; }
   .meter span { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
 
+  .career { display: grid; grid-template-columns: 1.35fr 1fr; gap: 3rem; align-items: start; }
+  .timeline li { padding-left: 1rem; border-left: 2px solid var(--border); }
+  .timeline li + li { margin-top: 1.35rem; }
+  .item-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; margin: 0; flex-wrap: wrap; }
+  .period { font-size: 0.86rem; font-variant-numeric: tabular-nums; }
+  .org { margin: 0.1rem 0 0.35rem; font-size: 0.92rem; }
+  .desc { margin: 0; font-size: 0.92rem; line-height: 1.5; }
+  .awards { display: grid; gap: 1rem; }
+  .award-card { padding: 1.1rem 1.2rem; }
+  .award-card .eyebrow { display: inline-flex; align-items: center; gap: 0.35rem; margin-bottom: 0.45rem; }
+  .award-card h3 { font-size: 1.02rem; margin: 0 0 0.35rem; }
+  .award-card p:last-child { margin: 0; font-size: 0.92rem; line-height: 1.5; }
+
   .posts li { display: flex; gap: 1.5rem; padding-block: 0.7rem; border-bottom: 1px dashed var(--border); align-items: baseline; }
   .posts time { flex: none; width: 7.5rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
   .posts a { color: var(--text); font-weight: 500; text-decoration: none; }
@@ -157,6 +207,7 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
   .body h3 a:hover { color: var(--accent); }
   .body p { margin: 0; font-size: 0.95rem; }
   .body .tags { margin-top: auto; padding-top: 0.4rem; }
+  .extra { display: flex; flex-wrap: wrap; gap: 0.75rem; }
   .extra a { font-weight: 500; font-size: 0.92rem; }
 
   .pubs { display: grid; gap: 2rem; }
@@ -166,7 +217,7 @@ const publications = (await getCollection('publications')).sort(byDate).slice(0,
     .hero :global(.avatar) { width: 10rem; height: 10rem; }
     .lead { margin-inline: auto; }
     .social { justify-content: center; }
-    .focus-grid, .about, .projects { grid-template-columns: 1fr; }
+    .focus-grid, .about, .career, .projects { grid-template-columns: 1fr; }
     .focus-grid { gap: 1.25rem; padding-block: 2.25rem; }
     .posts li { flex-direction: column; gap: 0.1rem; }
   }

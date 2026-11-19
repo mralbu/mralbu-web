@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Article from '../../layouts/Article.astro';
-import { formatDate, readingTime } from '../../utils';
+import { url, formatDate, readingTime, slugify } from '../../utils';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -17,12 +17,21 @@ const { Content } = await render(post);
     <h1>{post.data.title}</h1>
     <p class="muted">
       <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+      {post.data.updated && (
+        <> · Updated <time datetime={post.data.updated.toISOString()}>{formatDate(post.data.updated)}</time></>
+      )}
       · {readingTime(post.body)} min read
     </p>
+    {post.data.tags.length > 0 && (
+      <ul class="tags post-tags">
+        {post.data.tags.map((t) => <li><a href={url(`tag/${slugify(t)}/`)}>{t}</a></li>)}
+      </ul>
+    )}
   </Fragment>
   <div class="prose"><Content /></div>
 </Article>
 
 <style>
   p { margin: 0; }
+  .post-tags { margin-top: 0.9rem; }
 </style>

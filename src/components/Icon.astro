@@ -2,7 +2,7 @@
 import { siGithub } from 'simple-icons';
 
 interface Props {
-  name: 'github' | 'linkedin' | 'cv' | 'rss' | 'sun' | 'moon' | 'arrow' | 'pdf' | 'external';
+  name: 'github' | 'linkedin' | 'cv' | 'rss' | 'sun' | 'moon' | 'arrow' | 'pdf' | 'external' | 'award';
   size?: number;
 }
 const { name, size = 20 } = Astro.props;
@@ -38,4 +38,10 @@ const stroke = { fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'strok
   {name === 'moon' && <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z" />}
   {name === 'arrow' && <path d="M5 12h14M13 6l6 6-6 6" />}
   {name === 'external' && <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />}
+  {name === 'award' && (
+    <>
+      <circle cx="12" cy="8.5" r="5.5" />
+      <path d="M8.5 13.5 7 22l5-2.5L17 22l-1.5-8.5" />
+    </>
+  )}
 </svg>

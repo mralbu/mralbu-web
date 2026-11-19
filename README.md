@@ -16,10 +16,10 @@ npm run check     # type-check .astro / .ts files
 
 | What | Where |
 | --- | --- |
-| Name, bio, interests, education, skills, social links | `src/data/profile.ts` |
-| Blog posts | `src/content/posts/*.md` |
+| Name, bio, interests, education, skills, experience, awards, social links | `src/data/profile.ts` |
+| Blog posts (Markdown + LaTeX math via KaTeX) | `src/content/posts/*.md` |
 | Projects (card + external link) | `src/content/projects/<name>/index.md` + `featured.png` |
-| Publications | `src/content/publications/<name>/index.md` + `featured.png`; PDFs in `public/publication/<name>/` |
+| Publications | `src/content/publications/<name>/index.md` + optional `featured.png`; PDFs in `public/publication/<name>/` |
 | Colors / typography | `src/styles/global.css` |
 
 Frontmatter is validated by the schemas in `src/content.config.ts`.
@@ -30,11 +30,16 @@ To add a post, create `src/content/posts/my-post.md`:
 ---
 title: My post
 date: 2026-11-07
+updated: 2026-11-18
 summary: One-line summary shown in lists and RSS.
-tags: [python]
+tags: [python, petrophysics]
 ---
 
-Markdown here.
+Markdown here, including inline math $P_c(S_w)$ and display equations:
+
+$$
+\phi = \frac{V_p}{V_b}
+$$
 ```
 
 ## Deploy

@@ -7,7 +7,8 @@ import { url, formatDate } from '../utils';
 
 interface Props { pub: CollectionEntry<'publications'> }
 const { pub } = Astro.props;
-const { title, authors, venue, date, image, pdf } = pub.data;
+const { title, authors, venue, date, image, pdf, award } = pub.data;
+const isSelf = (name: string) => (profile.authorNames as readonly string[]).includes(name);
 ---
 
 <article class="pub">
@@ -20,13 +21,14 @@ const { title, authors, venue, date, image, pdf } = pub.data;
     <h3><a href={url(`publication/${pub.id}/`)}>{title}</a></h3>
     <p class="authors">
       {authors.map((a, i) => (
-        <>{a === profile.name ? <strong>{a}</strong> : a}{i < authors.length - 1 && ', '}</>
+        <>{isSelf(a) ? <strong>{a}</strong> : a}{i < authors.length - 1 && ', '}</>
       ))}
     </p>
     <p class="meta muted"><em>{venue}</em> · {formatDate(date, 'year')}</p>
+    {award && <p class="award"><span class="badge"><Icon name="award" size={14} /> {award}</span></p>}
     <div class="actions">
       {pdf && <a href={url(`publication/${pub.id}/${encodeURIComponent(pdf)}`)}><Icon name="pdf" size={15} /> PDF</a>}
-      <a href={url(`publication/${pub.id}/`)}>Abstract <Icon name="arrow" size={15} /></a>
+      <a href={url(`publication/${pub.id}/`)}>Details <Icon name="arrow" size={15} /></a>
     </div>
   </div>
 </article>
@@ -39,7 +41,8 @@ const { title, authors, venue, date, image, pdf } = pub.data;
   h3 a { color: var(--text); text-decoration: none; }
   h3 a:hover { color: var(--accent); }
   .authors { margin: 0; font-size: 0.95rem; }
-  .meta { margin: 0.15rem 0 0.6rem; font-size: 0.92rem; }
+  .meta { margin: 0.15rem 0 0.5rem; font-size: 0.92rem; }
+  .award { margin: 0 0 0.6rem; }
   .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .actions a {
     display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; font-weight: 500;

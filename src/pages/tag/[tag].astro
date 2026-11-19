@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { url, formatDate, slugify } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  );
+  const byTag = new Map<string, { label: string; posts: typeof posts }>();
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = slugify(tag);
+      if (!slug) continue;
+      const entry = byTag.get(slug) ?? { label: tag, posts: [] };
+      entry.posts.push(post);
+      byTag.set(slug, entry);
+    }
+  }
+  return [...byTag.entries()].map(([tag, { label, posts: taggedPosts }]) => ({
+    params: { tag },
+    props: { label, posts: taggedPosts },
+  }));
+}
+
+const { label, posts } = Astro.props;
+---
+
+<Base title={`#${label}`} description={`Blog posts tagged "${label}".`}>
+  <section class="container narrow wrap">
+    <a class="back" href={url('post/')}>← All posts</a>
+    <p class="eyebrow">Tag</p>
+    <h1>{label}</h1>
+    <ul class="post-list">
+      {posts.map((p) => (
+        <li>
+          <p class="meta muted">
+            <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time>
+            {p.data.updated && (
+              <> · Updated <time datetime={p.data.updated.toISOString()}>{formatDate(p.data.updated)}</time></>
+            )}
+          </p>
+          <h2><a href={url(`post/${p.id}/`)}>{p.data.title}</a></h2>
+          {p.data.summary && <p class="muted summary">{p.data.summary}</p>}
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .wrap { padding-block: 3rem; }
+  .back { display: inline-block; margin-bottom: 1.5rem; font-size: 0.92rem; text-decoration: none; }
+  .post-list { list-style: none; padding: 0; margin: 2rem 0 0; }
+  .post-list > li { padding-block: 1.25rem; border-bottom: 1px solid var(--border); }
+  .meta { margin: 0; font-size: 0.9rem; }
+  h2 { font-size: 1.3rem; margin: 0.2rem 0 0.3rem; }
+  h2 a { color: var(--text); text-decoration: none; }
+  h2 a:hover { color: var(--accent); }
+  .summary { margin: 0; }
+</style>

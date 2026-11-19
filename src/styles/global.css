@@ -11,7 +11,6 @@
   --radius: 14px;
   --max: 64rem;
   --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
@@ -75,6 +74,14 @@ h3 { font-size: 1.15rem; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; margin: 0; list-style: none; }
 .tags li { font-size: 0.78rem; padding: 0.15rem 0.6rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.tags li:has(a) { padding: 0; }
+.tags a { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; color: inherit; text-decoration: none; }
+.tags a:hover { text-decoration: underline; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; font-weight: 500;
+  padding: 0.2rem 0.65rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+}
 
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
 
@@ -91,6 +98,7 @@ h3 { font-size: 1.15rem; }
 .prose img { border-radius: 10px; }
 .prose table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
 .prose th, .prose td { border-bottom: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: 0.25rem; }
 
 /* Shiki dual themes */
 :root[data-theme='dark'] .astro-code, :root[data-theme='dark'] .astro-code span {

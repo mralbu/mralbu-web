@@ -3,10 +3,11 @@ import Icon from './Icon.astro';
 import { profile } from '../data/profile';
 import { url } from '../utils';
 
+const pathname = Astro.url.pathname;
 const nav = [
-  { label: 'Posts', href: url('#posts') },
-  { label: 'Projects', href: url('#projects') },
-  { label: 'Publications', href: url('#publications') },
+  { label: 'Posts', href: url('post/'), match: url('post/') },
+  { label: 'Projects', href: url('#projects'), match: null },
+  { label: 'Publications', href: url('publication/'), match: url('publication/') },
 ];
 ---
 
@@ -15,11 +16,18 @@ const nav = [
     <a class="brand" href={url()}>{profile.shortName}</a>
     <nav aria-label="Main">
       <ul>
-        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        {nav.map((item) => {
+          const active = item.match !== null && pathname.startsWith(item.match);
+          return (
+            <li>
+              <a href={item.href} aria-current={active ? 'page' : undefined}>{item.label}</a>
+            </li>
+          );
+        })}
       </ul>
-      <button class="theme" type="button" aria-label="Toggle dark mode">
-        <span class="sun"><Icon name="sun" size={18} /></span>
+      <button class="theme" type="button" aria-label="Toggle dark mode" aria-pressed="false">
         <span class="moon"><Icon name="moon" size={18} /></span>
+        <span class="sun"><Icon name="sun" size={18} /></span>
       </button>
     </nav>
   </div>
@@ -27,12 +35,23 @@ const nav = [
 
 <script>
   const root = document.documentElement;
+  const btn = document.querySelector<HTMLButtonElement>('.theme');
   const isDark = () =>
     root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  document.querySelector('.theme')?.addEventListener('click', () => {
+  const syncButton = () => {
+    if (!btn) return;
+    const dark = isDark();
+    btn.setAttribute('aria-pressed', String(dark));
+    const label = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    btn.setAttribute('aria-label', label);
+    btn.setAttribute('title', label);
+  };
+  syncButton();
+  btn?.addEventListener('click', () => {
     const next = isDark() ? 'light' : 'dark';
     root.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch {}
+    syncButton();
   });
 </script>
 
@@ -48,17 +67,17 @@ const nav = [
   nav { display: flex; align-items: center; gap: 0.25rem; }
   ul { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
   nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; padding: 0.4rem 0.6rem; border-radius: 8px; }
-  nav a:hover { color: var(--text); background: var(--accent-soft); }
+  nav a:hover, nav a[aria-current='page'] { color: var(--text); background: var(--accent-soft); }
   .theme {
     display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin-left: 0.25rem;
     border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--text); cursor: pointer;
   }
-  .moon { display: none; }
-  :global(:root[data-theme='dark']) .sun { display: none; }
-  :global(:root[data-theme='dark']) .moon { display: inline; }
+  .sun { display: none; }
+  :global(:root[data-theme='dark']) .moon { display: none; }
+  :global(:root[data-theme='dark']) .sun { display: inline; }
   @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .sun { display: none; }
-    :global(:root:not([data-theme='light'])) .moon { display: inline; }
+    :global(:root:not([data-theme='light'])) .moon { display: none; }
+    :global(:root:not([data-theme='light'])) .sun { display: inline; }
   }
   @media (max-width: 30rem) {
     nav a { padding: 0.4rem 0.4rem; font-size: 0.88rem; }

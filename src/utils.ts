@@ -13,3 +13,13 @@ export function formatDate(date: Date, style: 'long' | 'year' = 'long'): string 
 export function readingTime(text = ''): number {
   return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 220));
 }
+
+export function slugify(value: string): string {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}

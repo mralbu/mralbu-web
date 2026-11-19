@@ -38,7 +38,9 @@ const publications = defineCollection({
       date: z.coerce.date(),
       venue: z.string(),
       type: z.string().default('Conference paper'),
+      award: z.string().optional(),
       image: image().optional(),
+      imageAlt: z.string().default(''),
       // File name inside public/publication/<id>/
       pdf: z.string().optional(),
       doi: z.string().optional(),

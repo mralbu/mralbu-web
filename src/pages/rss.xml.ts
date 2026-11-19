@@ -7,16 +7,17 @@ export async function GET(context: APIContext) {
   const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
   );
-  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const basePath = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+  const site = new URL(basePath, context.site!);
   return rss({
     title: `${profile.shortName} · posts`,
     description: profile.description,
-    site: context.site!,
+    site,
     items: posts.map((p) => ({
       title: p.data.title,
       pubDate: p.data.date,
       description: p.data.summary,
-      link: `${base}/post/${p.id}/`,
+      link: `post/${p.id}/`,
     })),
   });
 }

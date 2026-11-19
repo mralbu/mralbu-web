@@ -1,10 +1,11 @@
 ---
 title: Estimation of Capillary Pressure Curves from Centrifuge Measurements Using Inverse Methods
-authors: [Marcelo Albuquerque, Felipe M. Eler, Heitor V.R. Carmargo, André L.M. Compan, Dario A. Cruz, Carlos E. Pedreira]
+authors: [Marcelo Albuquerque, Felipe M. Eler, Heitor V.R. Camargo, André L.M. Compan, Dario A. Cruz, Carlos E. Pedreira]
 date: 2018-10-01
 venue: Rio Oil & Gas 2018
 type: Conference paper
 image: ./featured.png
+imageAlt: Capillary pressure curve estimation figure from Rio Oil & Gas 2018 paper
 pdf: Estimation of Capillary Pressure Curves from Centrifuge Measurementes Using Inverse Methods.pdf
 summary: Estimation and uncertainty evaluation of capillary pressure curves from centrifuge experiments using Maximum Likelihood and Laplace Approximation methods on an analytically derived solution of the centrifuge saturation equation.
 tags: [SCAL, Capillary Pressure, Maximum Likelihood Estimation]
