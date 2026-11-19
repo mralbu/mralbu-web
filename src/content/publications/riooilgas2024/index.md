@@ -10,6 +10,8 @@ date: 2024-09-01
 venue: Rio Oil & Gas 2024
 type: Conference paper
 award: Plínio Cantanhede Award — Best Paper, Upstream Section
+image: ./featured.png
+imageAlt: Illustrative water and oil relative permeability curves comparing heterogeneous carbonate core measurements with a field-scale model
 summary: Relative permeability modeling of heterogeneous presalt carbonate rocks from laboratory SCAL measurements to field-scale reservoir simulation. Winner of the 2024 Plínio Cantanhede Award.
 tags: [SCAL, Relative Permeability, Carbonates, Presalt]
 ---
